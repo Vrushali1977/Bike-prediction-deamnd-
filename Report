@@ -1,0 +1,53 @@
+Report: Predict Bike Sharing Demand with AutoGluon
+Name: Vrushali Aoundhakar
+
+Initial Training
+After generating predictions using TabularPredictor, I observed some negative values in the output. Since bike counts can't be negative, I replaced any negative predictions with 0 before submission. This step was crucial to meet submission requirements and reflect realistic outputs.
+
+What was the top-ranked model that performed?
+The top-performing model from AutoGluon's leaderboard was: WeightedEnsemble_L2 — this model aggregates predictions from multiple base models to improve generalization and reduce overfitting, which likely led to the best validation performance.
+
+Exploratory Data Analysis and Feature Creation
+Parsed the datetime column to extract useful features such as hour, day, and weekday. Identified that the dataset had no missing values. Found that target variable count was influenced heavily by hour, season, weather, and workingday.
+
+I added additional time-based features by parsing datetime, which helped the model better capture temporal patterns.
+
+Model Performance After Feature Engineering
+Performance improved significantly after adding features like hour and weekday, as these directly affect bike demand (e.g., morning/evening rush hours or weekends). The RMSE score dropped due to these temporal features improving prediction accuracy.
+
+Hyperparameter Tuning
+Using presets='best_quality' and setting time_limit=600, AutoGluon performed internal HPO (Hyperparameter Optimization), resulting in a better RMSE than basic settings. While manual tuning wasn’t done explicitly, using high-quality presets made a noticeable difference by stacking multiple models and tuning their parameters.
+
+If you were given more time...
+If I had more time with this dataset, I would:
+
+Try manual hyperparameter tuning for top models individually.
+
+Do more advanced feature engineering, including interaction terms and weather trend encoding.
+
+Explore log-transformation on skewed target (count) to stabilize variance.
+
+Train on log(count + 1) and then invert the transformation on predictions.
+
+Model Comparison Table
+
+| model         | hpo1            | hpo2           | hpo3         | score (Kaggle) |
+|---------------|------------------|----------------|--------------|----------------|
+| initial       | None             | None           | None         | ~0.46          |
+| add_features  | hour, weekday    | season         | workingday   | ~0.43          |
+| hpo           | best_quality     | time_limit=600 | ensemble     | ~0.40          |
+Summary
+This project gave hands-on experience with:
+
+Automated ML using AutoGluon.
+
+Real-world data challenges like negative predictions.
+
+Feature extraction from datetime.
+
+Interpreting leaderboard models.
+
+Handling submission formats for Kaggle.
+
+The ensemble model boosted accuracy by leveraging diverse learners. Adding time-based features helped the model recognize usage patterns tied to rush hours and weekends. AutoGluon’s presets made tuning efficient without deep manual tweaks.
+
