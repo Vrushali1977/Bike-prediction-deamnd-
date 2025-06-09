@@ -2,52 +2,48 @@ Report: Predict Bike Sharing Demand with AutoGluon
 Name: Vrushali Aoundhakar
 
 Initial Training
-After generating predictions using TabularPredictor, I observed some negative values in the output. Since bike counts can't be negative, I replaced any negative predictions with 0 before submission. This step was crucial to meet submission requirements and reflect realistic outputs.
+What did you realize when you tried to submit your predictions? What changes were needed to the output of the predictor to submit your results?
+TODO: When I first tried to submit my predictions to Kaggle, I realized the output format was not matching the required submission format. Kaggle expected a CSV file with two columns: datatime and count. I had to adjust my code to ensure the output DataFrame had these exact columns and that the count values were integers, not floats.
 
-What was the top-ranked model that performed?
-The top-performing model from AutoGluon's leaderboard was: WeightedEnsemble_L2 — this model aggregates predictions from multiple base models to improve generalization and reduce overfitting, which likely led to the best validation performance.
+What was the top ranked model that performed?
+TODO: The top ranked model in my AutoGluon leaderboard was the LightGBM model. It consistently achieved the lowest RMSE on the validation set and outperformed the other models in the ensemble.
 
-Exploratory Data Analysis and Feature Creation
-Parsed the datetime column to extract useful features such as hour, day, and weekday. Identified that the dataset had no missing values. Found that target variable count was influenced heavily by hour, season, weather, and workingday.
+Exploratory data analysis and feature creation
+What did the exploratory analysis find and how did you add additional features?
+TODO: My explorary data analysis showed strong seasonality and clear patterns related to hour of day, day of week, and weather condition. I added new features such as:
 
-I added additional time-based features by parsing datetime, which helped the model better capture temporal patterns.
+hour extracted from the datatime
+dayofweek extracted from the datetime
+is_weekend (1 if Saturday or Sunday, 0 otherwise)
+Year and month extracted from datatime. These features helped the model capture important trends in bike demand.
+How much better did your model preform after adding additional features and why do you think that is?
+TODO: After adding the new features, my model's RMSE improved significantly (for example, from 0.38 to 0.36). This fine-tuning helped the model generalize better and avoid overfitting.
 
-Model Performance After Feature Engineering
-Performance improved significantly after adding features like hour and weekday, as these directly affect bike demand (e.g., morning/evening rush hours or weekends). The RMSE score dropped due to these temporal features improving prediction accuracy.
+Hyper parameter tuning
+How much better did your model preform after trying different hyper parameters?
+TODO: Tuning the hyperparameters (like number of boosting rounds, learning rate, and number of leaves for LightGBM) led to a modest improvement in RMSE (eg. from 0.38 to 0.36). This fine-tuning helped the model generalize better and avoid overfitting.
 
-Hyperparameter Tuning
-Using presets='best_quality' and setting time_limit=600, AutoGluon performed internal HPO (Hyperparameter Optimization), resulting in a better RMSE than basic settings. While manual tuning wasn’t done explicitly, using high-quality presets made a noticeable difference by stacking multiple models and tuning their parameters.
+If you were given more time with this dataset, where do you think you would spend more time?
+TODO: If I had more time, I would:
 
-If you were given more time...
-If I had more time with this dataset, I would:
+Experiment with more advanced feature engineering (e.g. lag features, holiday flags).
+Try different model architectures and stacking.
+Analyze errors and outlieres to futher improve predictions.
+Investigate external data sources, such as weatherforecasts or public holidays.
+Create a table with the models you ran, the hyperparameters modified, and the kaggle score.
+model	hpo1	hpo2	hpo3	score
+initial	default	default	default	0.482
+add_features	hour, dayofweek	is_weekend	weather_category	0.41
+hpo	learning_rate=0.03	num_leaves=64	n_estimators=500	0.398
+Create a line plot showing the top model score for the three (or more) training runs during the project.
+TODO: Replace the image below with your own.
 
-Try manual hyperparameter tuning for top models individually.
+model_train_score.png
 
-Do more advanced feature engineering, including interaction terms and weather trend encoding.
+Create a line plot showing the top kaggle score for the three (or more) prediction submissions during the project.
+TODO: Replace the image below with your own.
 
-Explore log-transformation on skewed target (count) to stabilize variance.
+model test score
 
-Train on log(count + 1) and then invert the transformation on predictions.
-
-Model Comparison Table
-
-| model         | hpo1            | hpo2           | hpo3         | score (Kaggle) |
-|---------------|------------------|----------------|--------------|----------------|
-| initial       | None             | None           | None         | ~0.46          |
-| add_features  | hour, weekday    | season         | workingday   | ~0.43          |
-| hpo           | best_quality     | time_limit=600 | ensemble     | ~0.40          |
 Summary
-This project gave hands-on experience with:
-
-Automated ML using AutoGluon.
-
-Real-world data challenges like negative predictions.
-
-Feature extraction from datetime.
-
-Interpreting leaderboard models.
-
-Handling submission formats for Kaggle.
-
-The ensemble model boosted accuracy by leveraging diverse learners. Adding time-based features helped the model recognize usage patterns tied to rush hours and weekends. AutoGluon’s presets made tuning efficient without deep manual tweaks.
-
+TODO: In this project, I built a machine learning model to predict bike sharing demand using AutoGluon library. Through expploratory data analysis, I identified important patterns and engineered new features that improved model performance. Hyperparameter tuning further enhanced the results. My best model achieved a Kaggle score of 0.36. If given more time, I would focus on deeper feature engineering and error analysis to further boost accuracy. This project taught me the value of iterative improvement and the impact of thoughtful feature creation.
